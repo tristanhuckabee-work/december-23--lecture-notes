@@ -16,7 +16,7 @@ let pen = new Pen('gel', 'plastic', 'blk', 'pilot', 'blk', 5);
 pen.write('Hello!');
 pen.refill();
 pen.write('Hello!');
-
+// console.log(Book.author);
 
 // console.log(pen instanceof Stationary);
 
