@@ -1,10 +1,3 @@
-# Context in Javascript
-## Learning Objectives
-- Understand when the original context is lost inside of a method
-- Predict the context inside of a function
-- Bind the context of a method to an object
-- Change the context of a function using call and apply
-- Compare and contrast context in normal functions and arrow functions
 # Context
 Every function that is invoked has both a **scope** and a **context**.
 - `Scope` refers to the visibility and availability of variables.
