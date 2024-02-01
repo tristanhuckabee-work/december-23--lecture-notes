@@ -1,14 +1,3 @@
-- Throw, catch, and create errors
-- Identify and research common JavaScript error types
-- Compare and contrast unit vs. integration vs. end-to-end testing
-- Create, modify, and get to pass a suite of Mocha tests using the Chai assertion library
-- Understand and apply Red-Green-Refactor cycle of Test-Driven Development (TDD)
-- Understand given test specs and refer to and navigate the Mocha and Chai docs when encountering unknown syntax
-- Construct an informed and high-quality question based off of an error message
-- Create appropriate unit tests using the Single Responsibility Principle and DRY
--Plan for appropriate test coverage
-- Identify and test for edge cases
-- Interpret a test spec to determine a project's requirements
 ## JS Error Types
 There are seven core errors in JS:
 - `SyntaxError` : Error in the syntax
