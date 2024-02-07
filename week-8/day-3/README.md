@@ -1,187 +1,98 @@
-## JS Error Types
-There are seven core errors in JS:
-- `SyntaxError` : Error in the syntax
-- `ReferenceError` : An invalid reference is made
-- `TypeError` : A variable or parameter is not the valid type
-- `RangeError` : A numerical variable or parameter is outside of its valid range
-- `InternalError` : Internal JS engine
-- `EvalError` : Global `eval` function
-- `URIError` : When `encodeURI()` or `decodeURI()` are passed invalid parameters
+# Arrays & Stacks
+## Arrays
+Arrays are the most time and space efficient way to store data and should be thoroughly understood.
 
-We'll focus on the 3 most common:
-### `SyntaxError`
-Thrown when the JS engine attempts to parse code that does not conform to the syntax of the JS language. Includes missing `<>{}[]()` or misspelled words.
+__An array is a sequence of elements of the same type stored in a contiguous block of memory.__
+
+```js
+// An array containing 4 32-bit integers
+array = [1, 23, 456, 7890 ]
+```
+Our memory may look something like this:
 ```javaScript
-// function is misspelt(sp?) so we get a SyntaxError
-functio broken() {
-  console.log("I'm broken");
-}
+// 104      105      106      107
+00000000 00000000 00000000 00000001 => 1
+// 108      109      110      111
+00000000 00000000 00000000 00010111 => 23
+// 112      113      114      115
+00000000 00000000 00000001 11001000 => 456
+// 116      117      118      119
+00000000 00000000 00011110 11010010 => 7890
 ```
+As we can see, the values are stored, end to end with no space between, so arrays are the __optimally space-efficient__ method for data storage.
+
+When we want to access array[2], javascript runs this, under the hood:`valueAddress = startAddress + index * sizeOf(dataType)`.
+
+```
+valueAddress = 104 + 2*4 => 112
+```
+This means the look up the index of an array is O(3) => O(1)
+
+This may seem weird considering in JS you don't have to store only numbers or only strings, but that's because JS is wonky in that it actually elements as a generic data object, specifically a hash-table (a type of object).
+## Array Resizing
+Previously we saw that to store 4 32-bit integers our memory may look like this:
 ```javaScript
-function broken() {
-  console.log("I'm broken");
-// we have an extra curly boi here so we get a SyntaxError
-}}
+// 104      105      106      107
+00000000 00000000 00000000 00000001 => 1
+// 108      109      110      111
+00000000 00000000 00000000 00010111 => 23
+// 112      113      114      115
+00000000 00000000 00000001 11001000 => 456
+// 116      117      118      119
+00000000 00000000 00011110 11010010 => 7890
 ```
-### `ReferenceError`
-Thrown when we try to use a variable that doesn't exist or hasn't been declared yet.
+If we want to push, usually a O(1) operation, another element into our array we need an additional 4 bytes of memory. But we can't guarantee that the next 4 bytes will be available.
 ```javaScript
-function CREAM() {
-  const money = '$$$';
-  // variable 'monie' doesn't exist so we get a ReferenceError
-  console.log(monie);
-}
-
-CREAM()
+// 104      105      106      107
+00000000 00000000 00000000 00000001 => 1
+// 108      109      110      111
+00000000 00000000 00000000 00010111 => 23
+// 112      113      114      115
+00000000 00000000 00000001 11001000 => 456
+// 116      117      118      119
+00000000 00000000 00011110 11010010 => 7890
+// 120      121      122      123
+11111111 11111111 11111111 11111111 => some string    
 ```
+What happens now?
+
+Now we have to search through memory and move each element to the new area. This makes push an O(n) operation.
+Because of `resizing`, arrays actually overallocate memory to ensure that push will be O(1) time. So if you want 4 blocks it may save 9, then when you get to 10 elements, it may resize to 15 or so.
 ```javaScript
-function CREAM() {
-  const money = '$$$';
-  console.log(money);
-}
-
-// variable 'money' is out of scope so we get a ReferenceError
-console.log(money)
+// We see:
+[1,23,456,7890]
+// JS sees:
+[1,23,456,7890, <empty>, <empty>, <empty>, <empty>]
 ```
-### `TypeError`
-A few reasons `TypeError` is commonly thrown:
-- An operationi can't be performed because the operand is the wrong type.
-- You're attempting to modify a value that can't be modded.
+
+## Push v Unshift v Splice
+Push = O(1)
+### Unshift
+In order to add to the front we need to shift everything, then add the new value so it's O(n).
 ```javaScript
-let dog = 'hello';
-
-// dog is not a function, so we get a TypeError
-dog()
+//100-104 105-108 109-112 113-116 117-120
+  number  number  number  number  empty
+//100-104 105-108 109-112 113-116 117-120
+  number  number  number  empty   number
+//100-104 105-108 109-112 113-116 117-120
+  number  number  empty   number  number
+//100-104 105-108 109-112 113-116 117-120
+  number  empty   number  number  number
+//100-104 105-108 109-112 113-116 117-120
+  empty   number  number  number  number
+//100-104 105-108 109-112 113-116 117-120
+  newNumb number  number  number  number
 ```
-```javaScript
-const dog = 'hello';
+### Shift
+The same happens when we shift but in reverse
+### Splice
+If you splice at the end : it's a push/pop
+If you splice at the beginning : it's a unshift/shift
+If you splice in the middle it's O(n) because we don't care about the fraction of n you're modifying.
 
-// dog is const, attempting reassignment gives a TypeError
-dog = 'goodbye'
-```
-### Looking up Errors
-If you run into an error you don't know
+## Stacks
+Stacks are an `abstract data type` that follows the rule of __first in, first out (FIFO)__ or __last in, last out (LIFO)__.
 
-- In the error look for a line that looks similar to this :
-```shell
-// this is the stacktrace
-// file.js is the file:13 is the line number:12 is the char
-at something (/file/path/to/current/file.js:13:12)
-```
-- Check MDN for the function or method you're running. 
-- Check MDN for the Error Type
-## Error Handling
-### Custom Errors
-```javaScript
-let myError = new Error(message, fileName, lineNumber);
-// or
-let newError = Error(message);
-```
-### Throwing Errors
-```JavaScript
-function giveMeNumber(num) {
-  if (typeof num !== 'number') {
-    // Yes, we can throw JS errors too
-    throw new TypeError('Give Me Number');
-  } else {
-    return 'yupp'
-  }
-}
+When you add to a stack, you're pushing to the stack.
 
-giveMeNumber('aye')
-```
-Errors will stop your code from continuing, we can stop this by using `try...catch` blocks:
-```javaScript
-function giveMeNumber(num) {
-  if (typeof num !== 'number') {
-    // Yes, we can throw JS errors too
-    throw new TypeError('Give Me Number');
-  } else {
-    return 'yupp'
-  }
-}
-
-try{
-  giveMeNumber('aye')
-} catch (error) {
-  console.error(`Gon' Fishin'...\nCaught: ${error.name}: ${error.message}`);
-}
-
-console.log('We keep going!');
-```
-Many `SyntaxErrors` can't be caught with a `try...catch` :(
-
-#### ...finally
-This block will run whether or not you throw an error: 
-```javaScript
-function giveMeNumber(num) {
-  if (typeof num !== 'number') {
-    // Yes, we can throw JS errors too
-    throw new TypeError('Give Me Number');
-  } else {
-    return 'yupp'
-  }
-}
-
-try{
-  giveMeNumber('aye')
-} catch (error) {
-  console.error(`Gon' Fishin'...\nCaught: ${error.name}: ${error.message}`);
-} finally {
-  console.log('This always runs!');
-}
-
-console.log('We keep going!');
-```
-## Testing Pyramid
-### Why Test?
-- Make sure your code works
-- Increase Flexibility and Confidence
-
-When we know what we're testing for, we know exactly what the end goal of the code we're writing. And if you break something, the tests will tell you!
-- Make collaboration easier
-
-Specs allow teams to have confidence that each module performs a specific task and reduces the need for expensive coordination. The specs themselves become an effective form of communication.
-- Produce Documentation
-
-If the tests are written well, the tests can serve as documentation for the codebase. Need to know what such and such module does? Check out the specs. This is related to easing collaboration.
-## Testing Pyramid
-![Testing Pyramid](image.png)
-- **Unit Tests** : Tests each piece of code on it's own.
-- **Integration Tests** : Make sure pieces of code work together.
-- **End-to-End Tests (E2E)** : Make sure the whole applicatioin works.
-
-### Test-Driven Development (TDD)
-The practice of writing tests before writing code. Why?
-- Ensures the code written works
-  - Code is written to pass specs
-  - Code with pre-written specs allows other devs to add and test new code without breaking other code.
-- Only required code is written
-  - When you have tests it helps reduce un-needed functionality.
-  - TDD and YAGNI ("you ain't gonna need it") got hand-in-hand.
-- Enforces modularity
-  - You're forced to think about your app in small, testable chunks, so you write each chunk to be modular
-- Better understanding of what code should be doing
-  - Ensures you know what the piece of code for a spec is trying to do
-### Three Steps of TTD : Red, Green, Refactor
-![Red Green Refactor Flow](image-1.png)
-
-**Red** : Write the tests and watch them fail (failing tests are red). This ensures no false positives.
-
-**Green** : Write the minimum amount of code to ensure the tests pass (passing tests are green).
-
-**Refactor** : Refactor your code, make it easy to maintain and read!
-
-## Unit Testing with Mocha and Chai
-- `npm init -y` : initializes npm on your project
-- `npm install mocha chai` : will install the npm packages for mocha and chai
-  - NOTE: you may run into some issues with versioning, make sure the versions listed in you `package.json` are the same version as the ones your told to install.
-- create a directory call `test`, mocha expects this.
-- put any test files such as `base-test.js` in the test directory
-- in `base-test.js` import required code
-```javaScript
-const { expect } = require('chai');
-const User = require('../user.js');
-```
-- run `mocha` to test that everything fails.
-- write your tests
+When you remove from a stack, you're popping from the stack.
