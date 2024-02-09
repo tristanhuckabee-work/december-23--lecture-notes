@@ -1,9 +1,32 @@
-# Intro to Number Bases : Binary, Decimal and Hexadecimal
-## Base 10 : Decimal
+# Memory and Radixes
+## Memory
+Memory is a key component in all computers. It stores the state of every program along with the code itself. Every variable, every array, every line of code is stored in memory. So, what is memory?
+
+### RAM (Random Access Memory)
+Stores data for programs in use, no hard-drives or SSDs.
+
+Ram is faster than drive storage but more expensive.
+
+`Memory Address aka Memory Pointer aka Memory Reference`
+
+A slice of memory is different depending on the processor...
+```javascript
+// 8-bit
+104
+00000000
+// 32-bit
+104
+00000000000000000000000000000000
+// 64-bit
+104
+0000000000000000000000000000000000000000000000000000000000000000
+```
+## Intro to Number Bases : Binary, Decimal and Hexadecimal
+### Base 10 : Decimal
 This is the number system we're all very acquainted with.
 
 We count using numbers 0 - 9.
-## Base 2 : Binary (0b || 0B)
+### Base 2 : Binary (0b || 0B)
 In this system we only use the numbers 1 and 0.
 ```
 0000 : 0   0101 : 5
@@ -12,7 +35,7 @@ In this system we only use the numbers 1 and 0.
 0011 : 3   1000 : 8
 0100 : 4   1000 : 8
 ```
-### Binary to Decimal
+#### Binary to Decimal
 For each digit, starting at the right,
 n = it's position in the number
 B = the base
@@ -26,7 +49,7 @@ Base to Decimal : __B<sup>n</sup> * v__
 10<10   2^2 * 0 => 4 * 0 => 0 + 2 + 0
 1<010   2^3 * 1 => 8 * 1 => 8 + 0 + 2 + 0 => 10
 ```
-### Decimal to Binary
+#### Decimal to Binary
 Divide the decimal number by 2, keeping track of remainders.
 ```
 365
@@ -41,7 +64,7 @@ Divide the decimal number by 2, keeping track of remainders.
 1  /2 => 0  r1
 0b101101101
 ```
-## Base 16 : Hexadecimal ( 0x || 0X )
+### Base 16 : Hexadecimal ( 0x || 0X )
 In this system we use numbers from 1-F, that's base-16:
 
 0 1 2 3 4 5 6 7 8 9 A B C D E F
@@ -65,7 +88,7 @@ Hexadecimal is often used as shorthand for binary: one hex digit can represent 4
 14 = 0b1110 = 0xE
 15 = 0b1111 = 0xF
 ```
-### Hexadecimal to Decimal
+#### Hexadecimal to Decimal
 ```
 0xF23C
 0xF23C< 16^0 * c => 1    * 12 => 12
@@ -73,7 +96,7 @@ Hexadecimal is often used as shorthand for binary: one hex digit can represent 4
 0xF2<3C 16^2 * 2 => 256  * 2  => 512 + 48 + 12
 0xF<23C 16^3 * f => 4096 * 15 => 61,440 + 512 + 48 + 12 => 62,012
 ```
-### Decimal to Hexadecimal
+#### Decimal to Hexadecimal
 ```
 62012
 62012/16 => 3875r12 => C
@@ -83,7 +106,7 @@ Hexadecimal is often used as shorthand for binary: one hex digit can represent 4
 0xF23C
 ```
 
-## Bits, Bytes & Beyond
+### Bits, Bytes & Beyond
 **Bi**nary Digi**ts** are called bits, there are 8 bits in a byte.
 Then we can apply metric prefixes to dictate greater numbers
 ```
@@ -96,7 +119,7 @@ exa   => 1,000,000,000,000,000,000 bytes
 zetta => 1,000,000,000,000,000,000,000 bytes
 yotta => 1,000,000,000,000,000,000,000,000 bytes
 ```
-## Letters in Binary
+### Letters in Binary
 We represent letters in binary by using ASCII (American Standard Code for Informationi Interchange)
 ![alt text](image.png)
 
@@ -106,7 +129,7 @@ We represent letters in binary by using ASCII (American Standard Code for Inform
 01000001 01000010 01000011    (3 8-bit strings)
 0100 0001 0100 0010 0100 0011 (in memory)
 ```
-### Built-in Conversions in JS
+#### Built-in Conversions in JS
 `String.fromCharCode()` : Get character from Decimal Code on ASCII table
 ```javaScript
 String.fromCharCode(65); // A
